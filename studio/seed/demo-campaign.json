@@ -1,0 +1,95 @@
+[
+  {
+    "_id": "promo-page-wander-summer-drop",
+    "_type": "promoLandingPage",
+    "title": "Wander Summer Drop",
+    "slug": {
+      "_type": "slug",
+      "current": "wander-summer-drop"
+    },
+    "heroHeadline": "Wander Summer Drop Is Live",
+    "heroImage": {
+      "_type": "image",
+      "asset": {
+        "_type": "reference",
+        "_ref": "image-8b9d3e74541286ec4297938fe6d2601636cb335f-896x1200-jpg"
+      }
+    }
+  },
+  {
+    "_id": "campaign-wander-summer-drop",
+    "_type": "campaign",
+    "title": "Wander Summer Drop Campaign",
+    "slug": {
+      "_type": "slug",
+      "current": "wander-summer-drop-campaign"
+    },
+    "campaignType": "productDrop",
+    "launchDate": "2026-01-01T08:00:00.000Z",
+    "endDate": "2027-01-01T08:00:00.000Z",
+    "targetCollection": {
+      "_type": "reference",
+      "_ref": "4779b820-7481-4bae-822e-29f32695a67a"
+    },
+    "notes": "Demo campaign generated for storefront orchestration walkthrough.",
+    "surfaces": [
+      {
+        "_key": "heroSlot",
+        "_type": "homepageHeroSlot",
+        "slotType": "homepageHero",
+        "headline": "Wander Summer Drop 2026",
+        "subheadline": "Limited cross-country essentials available now.",
+        "image": {
+          "_type": "image",
+          "asset": {
+            "_type": "reference",
+            "_ref": "image-8b9d3e74541286ec4297938fe6d2601636cb335f-896x1200-jpg"
+          },
+          "alt": "Wander campaign hero image"
+        },
+        "cta": {
+          "_type": "cta",
+          "label": "View campaign",
+          "url": "/promos/wander-summer-drop"
+        }
+      },
+      {
+        "_key": "badgeSlot",
+        "_type": "categoryBadgeSlot",
+        "slotType": "categoryBadge",
+        "category": {
+          "_type": "reference",
+          "_ref": "4779b820-7481-4bae-822e-29f32695a67a"
+        },
+        "badgeText": "Summer Drop",
+        "badgeColor": "yellow"
+      },
+      {
+        "_key": "editorialSlot",
+        "_type": "categoryEditorialZoneSlot",
+        "slotType": "categoryEditorialZone",
+        "category": {
+          "_type": "reference",
+          "_ref": "4779b820-7481-4bae-822e-29f32695a67a"
+        },
+        "headline": "Curated for cross-country adventurers",
+        "featuredProducts": [
+          {
+            "_key": "featuredProduct1",
+            "_type": "reference",
+            "_ref": "2bc84e45-5cdf-4a04-b351-1c117eca3878"
+          }
+        ]
+      },
+      {
+        "_key": "landingSlot",
+        "_type": "promoLandingPageSlot",
+        "slotType": "promoLandingPage",
+        "page": {
+          "_type": "reference",
+          "_ref": "promo-page-wander-summer-drop"
+        }
+      }
+    ]
+  }
+]

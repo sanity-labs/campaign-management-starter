@@ -1,0 +1,32 @@
+{
+  "name": "@starter/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "node -e \"console.log('No frontend tests yet')\""
+  },
+  "dependencies": {
+    "@portabletext/react": "^6.0.3",
+    "@sanity/client": "catalog:",
+    "@sanity/image-url": "^2.0.3",
+    "@tailwindcss/postcss": "^4.2.1",
+    "groq": "catalog:",
+    "next": "^16",
+    "next-sanity": "^12.1.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@starter/sanity-types": "workspace:*",
+    "@starter/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

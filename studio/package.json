@@ -1,0 +1,35 @@
+{
+  "name": "studio",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit",
+    "schema:extract": "sanity schema extract",
+    "schema:deploy": "sanity schema deploy",
+    "typegen": "sanity schema extract && sanity typegen generate",
+    "generate-sample-data": "NODE_OPTIONS='--import tsx/esm' sanity exec scripts/generate-sample-data.ts --with-user-token -- --out sample-data.ndjson",
+    "import-sample-data": "NODE_OPTIONS='--import tsx/esm' sanity exec scripts/import-sample-data.ts --with-user-token",
+    "bootstrap": "NODE_OPTIONS='--import tsx/esm' sanity exec scripts/bootstrap.ts --with-user-token"
+  },
+  "dependencies": {
+    "@sanity/assist": "latest",
+    "@sanity/icons": "latest",
+    "@sanity/presentation": "latest",
+    "@sanity/vision": "latest",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sanity": "catalog:",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@starter/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
