@@ -9,6 +9,9 @@ type CampaignContext = {
     surfaces?: Array<{slotType?: string}>
   }
   getClient: (opts: {apiVersion: string}) => {
+    withConfig: (opts: {perspective: 'published'}) => {
+      fetch: (query: string, params: Record<string, unknown>) => Promise<number>
+    }
     fetch: (query: string, params: Record<string, unknown>) => Promise<number>
   }
 }
@@ -16,7 +19,6 @@ type CampaignContext = {
 const overlapQuery = `
   count(*[
     _type == "campaign" &&
-    !(_id in path("drafts.**")) &&
     _id != $selfId &&
     dateTime(launchDate) <= dateTime($endDate) &&
     dateTime(endDate) >= dateTime($launchDate) &&
@@ -110,6 +112,7 @@ export const campaign = defineType({
       const selfId = (doc._id ?? '').replace(/^drafts\./, '')
       const count = await typedContext
         .getClient({apiVersion: '2025-02-19'})
+        .withConfig({perspective: 'published'})
         .fetch(overlapQuery, {selfId, launchDate: doc.launchDate, endDate: doc.endDate, slotTypes})
 
       return count > 0

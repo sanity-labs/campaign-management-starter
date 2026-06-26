@@ -21,14 +21,12 @@ const availabilityCondition = 'count(variants[available == true]) > 0'
 const categoryHasAnyCampaignCondition = `
   count(*[
     _type == "campaign" &&
-    !(_id in path("drafts.**")) &&
     targetCollection._ref == ^.category._ref
   ]) > 0
 `
 const categoryHasActiveCampaignCondition = `
   count(*[
     _type == "campaign" &&
-    !(_id in path("drafts.**")) &&
     dateTime(launchDate) <= dateTime(now()) &&
     dateTime(endDate) >= dateTime(now()) &&
     targetCollection._ref == ^.category._ref
@@ -118,7 +116,6 @@ export function buildFilteredProductsQuery(filters: ProductFiltersInput): string
 export const ACTIVE_CAMPAIGN_QUERY = /* groq */ `
   *[
     _type == "campaign" &&
-    !(_id in path("drafts.**")) &&
     dateTime(launchDate) <= dateTime(now()) &&
     dateTime(endDate) >= dateTime(now())
   ][0]{
