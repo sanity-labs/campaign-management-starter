@@ -1,3 +1,4 @@
+import type {Route} from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import {stegaClean} from 'next-sanity'
@@ -27,7 +28,7 @@ export function ProductCard({product}: ProductCardProps) {
   const hasDiscount = Boolean(price?.compareAtPrice && price.compareAtPrice > (price.amount ?? 0))
 
   return (
-    <Link href={`/products/${slug}`} className="group block">
+    <Link href={`/products/${slug}` as Route} className="group block">
       <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-neutral-100">
         {image?.asset?.url ? (
           <Image

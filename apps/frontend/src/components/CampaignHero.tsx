@@ -1,5 +1,6 @@
 'use client'
 
+import type {Route} from 'next'
 import Link from 'next/link'
 import {stegaClean} from 'next-sanity'
 import {useEffect, useMemo, useState} from 'react'
@@ -84,7 +85,7 @@ export function CampaignHero({initialCampaign}: CampaignHeroProps) {
         ) : null}
         <div className="mt-10">
           <Link
-            href={heroCtaHref}
+            href={heroCtaHref as Route}
             className="inline-flex rounded-full bg-black px-8 py-3 text-sm font-medium text-white hover:bg-neutral-800"
           >
             {heroCtaLabel}
