@@ -4,6 +4,7 @@ import {defineConfig} from 'sanity'
 import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 import {campaignStructure, singletonDocumentActions} from './lib/structure'
+import {resolve} from './presentation/resolve'
 import {schemaTypes} from './schemaTypes'
 
 function firstResolvedValue(values: Array<string | undefined>) {
@@ -35,6 +36,7 @@ export default defineConfig({
   plugins: [
     structureTool({structure: campaignStructure}),
     presentationTool({
+      resolve,
       previewUrl: {
         previewMode: {enable: '/api/draft-mode/enable'},
         origin: previewUrl ?? 'http://localhost:3000',

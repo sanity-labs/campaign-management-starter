@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {notFound} from 'next/navigation'
 import {urlFor} from '@/sanity/image'
-import {client} from '@/sanity/client'
+import {sanityFetch} from '@/sanity/live'
 import {PROMO_LANDING_PAGE_QUERY} from '@/sanity/queries'
 
 interface PromoPageProps {
@@ -21,11 +21,11 @@ interface PromoLandingPageResult {
 
 export default async function PromoPage({params}: PromoPageProps) {
   const {slug} = await params
-  const promo = await client.fetch<PromoLandingPageResult | null>(
-    PROMO_LANDING_PAGE_QUERY,
-    {slug},
-    {tag: 'promo.page'},
-  )
+  const {data} = await sanityFetch({
+    query: PROMO_LANDING_PAGE_QUERY,
+    params: {slug},
+  })
+  const promo = data as PromoLandingPageResult | null
 
   if (!promo) notFound()
 

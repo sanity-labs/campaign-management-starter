@@ -1,5 +1,6 @@
+import {stegaClean} from 'next-sanity'
 import {ProductGrid} from '@/components/ProductGrid'
-import {client} from '@/sanity/client'
+import {sanityFetch} from '@/sanity/live'
 import {
   ACTIVE_CAMPAIGN_QUERY,
   buildFilteredProductsQuery,
@@ -58,23 +59,26 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
   const category = params.category || undefined
   const brand = params.brand || undefined
 
-  const [filters, products, activeCampaign] = await Promise.all([
-    client.fetch<{categories: FilterItem[]; brands: FilterItem[]}>(
-      FILTER_OPTIONS_QUERY,
-      {},
-      {tag: 'products.filters'},
-    ),
-    client.fetch(buildFilteredProductsQuery({category, brand}), {}, {tag: 'products.list'}),
-    client.fetch<ActiveCampaign | null>(ACTIVE_CAMPAIGN_QUERY, {}, {tag: 'campaign.active'}),
+  const [filtersResult, productsResult, campaignResult] = await Promise.all([
+    sanityFetch({query: FILTER_OPTIONS_QUERY}),
+    sanityFetch({query: buildFilteredProductsQuery({category, brand})}),
+    sanityFetch({query: ACTIVE_CAMPAIGN_QUERY}),
   ])
+  const filters = filtersResult.data as {categories: FilterItem[]; brands: FilterItem[]}
+  const products = productsResult.data as Parameters<typeof ProductGrid>[0]['products']
+  const activeCampaign = campaignResult.data as ActiveCampaign | null
 
-  const effectiveCategorySlug = category || activeCampaign?.targetCollection?.slug || undefined
+  const effectiveCategorySlug =
+    category || stegaClean(activeCampaign?.targetCollection?.slug) || undefined
   const badgeSlot =
-    activeCampaign?.badgeSlots?.find((slot) => slot.category?.slug === effectiveCategorySlug) ||
-    activeCampaign?.badgeSlots?.[0]
+    activeCampaign?.badgeSlots?.find(
+      (slot) => stegaClean(slot.category?.slug) === effectiveCategorySlug,
+    ) || activeCampaign?.badgeSlots?.[0]
   const editorialSlot =
-    activeCampaign?.editorialSlots?.find((slot) => slot.category?.slug === effectiveCategorySlug) ||
-    activeCampaign?.editorialSlots?.[0]
+    activeCampaign?.editorialSlots?.find(
+      (slot) => stegaClean(slot.category?.slug) === effectiveCategorySlug,
+    ) || activeCampaign?.editorialSlots?.[0]
+  const badgeColor = stegaClean(badgeSlot?.badgeColor)
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 md:py-14">
@@ -86,9 +90,9 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
         {badgeSlot?.badgeText ? (
           <span
             className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-              badgeSlot.badgeColor === 'yellow'
+              badgeColor === 'yellow'
                 ? 'bg-yellow-300 text-yellow-950'
-                : badgeSlot.badgeColor === 'white'
+                : badgeColor === 'white'
                   ? 'border border-neutral-300 bg-white text-neutral-900'
                   : 'bg-black text-white'
             }`}
@@ -105,7 +109,10 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
             {activeCampaign.promoPage?.slug ? (
               <>
                 Explore the campaign page:{' '}
-                <a className="underline" href={`/promos/${activeCampaign.promoPage.slug}`}>
+                <a
+                  className="underline"
+                  href={`/promos/${stegaClean(activeCampaign.promoPage.slug)}`}
+                >
                   {activeCampaign.promoPage.title || 'View promo'}
                 </a>
               </>
@@ -127,7 +134,7 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
               {editorialSlot.featuredProducts.map((product) => (
                 <a
                   key={product._id}
-                  href={product.slug ? `/products/${product.slug}` : '/products'}
+                  href={product.slug ? `/products/${stegaClean(product.slug)}` : '/products'}
                   className="rounded-full border border-neutral-300 px-3 py-1 text-sm text-neutral-700 hover:border-neutral-500"
                 >
                   {product.title || 'Featured product'}
@@ -154,19 +161,22 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
             >
               All
             </a>
-            {filters.categories.map((item) => (
-              <a
-                key={item._id}
-                href={makeFilterHref({category, brand}, 'category', item.slug ?? undefined)}
-                className={`rounded-full border px-3 py-1 text-sm ${
-                  category === item.slug
-                    ? 'border-black bg-black text-white'
-                    : 'border-neutral-300 text-neutral-700'
-                }`}
-              >
-                {item.title}
-              </a>
-            ))}
+            {filters.categories.map((item) => {
+              const slug = stegaClean(item.slug)
+              return (
+                <a
+                  key={item._id}
+                  href={makeFilterHref({category, brand}, 'category', slug ?? undefined)}
+                  className={`rounded-full border px-3 py-1 text-sm ${
+                    category === slug
+                      ? 'border-black bg-black text-white'
+                      : 'border-neutral-300 text-neutral-700'
+                  }`}
+                >
+                  {item.title}
+                </a>
+              )
+            })}
           </div>
         </div>
 
@@ -183,19 +193,22 @@ export default async function ProductsPage({searchParams}: ProductsPageProps) {
             >
               All
             </a>
-            {filters.brands.map((item) => (
-              <a
-                key={item._id}
-                href={makeFilterHref({category, brand}, 'brand', item.slug ?? undefined)}
-                className={`rounded-full border px-3 py-1 text-sm ${
-                  brand === item.slug
-                    ? 'border-black bg-black text-white'
-                    : 'border-neutral-300 text-neutral-700'
-                }`}
-              >
-                {item.title}
-              </a>
-            ))}
+            {filters.brands.map((item) => {
+              const slug = stegaClean(item.slug)
+              return (
+                <a
+                  key={item._id}
+                  href={makeFilterHref({category, brand}, 'brand', slug ?? undefined)}
+                  className={`rounded-full border px-3 py-1 text-sm ${
+                    brand === slug
+                      ? 'border-black bg-black text-white'
+                      : 'border-neutral-300 text-neutral-700'
+                  }`}
+                >
+                  {item.title}
+                </a>
+              )
+            })}
           </div>
         </div>
       </div>

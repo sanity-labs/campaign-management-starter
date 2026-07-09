@@ -2,7 +2,7 @@ import Link from 'next/link'
 import {notFound} from 'next/navigation'
 import type {Metadata} from 'next'
 import {ProductDetails} from '@/components/ProductDetails'
-import {client} from '@/sanity/client'
+import {sanityFetch} from '@/sanity/live'
 import {PRODUCT_QUERY, PRODUCT_SLUGS_QUERY} from '@/sanity/queries'
 
 interface Props {
@@ -38,13 +38,23 @@ interface ProductResult {
 }
 
 export async function generateStaticParams() {
-  const products: Array<{slug: string | null}> = await client.fetch(PRODUCT_SLUGS_QUERY)
+  const {data} = await sanityFetch({
+    query: PRODUCT_SLUGS_QUERY,
+    perspective: 'published',
+    stega: false,
+  })
+  const products = data as Array<{slug: string | null}>
   return products.filter((p) => p.slug).map((p) => ({slug: p.slug!}))
 }
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug} = await params
-  const product: ProductResult | null = await client.fetch(PRODUCT_QUERY, {slug})
+  const {data} = await sanityFetch({
+    query: PRODUCT_QUERY,
+    params: {slug},
+    stega: false,
+  })
+  const product = data as ProductResult | null
   if (!product) return {title: 'Product Not Found'}
   return {
     title: `${product.title} | Wander`,
@@ -54,11 +64,11 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function ProductPage({params}: Props) {
   const {slug} = await params
-  const product: ProductResult | null = await client.fetch(
-    PRODUCT_QUERY,
-    {slug},
-    {tag: 'product.detail'},
-  )
+  const {data} = await sanityFetch({
+    query: PRODUCT_QUERY,
+    params: {slug},
+  })
+  const product = data as ProductResult | null
 
   if (!product) notFound()
 

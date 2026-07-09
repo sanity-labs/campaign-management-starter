@@ -28,6 +28,8 @@ if (env.SANITY_PROJECT_ID && env.SANITY_DATASET) {
     `NEXT_PUBLIC_SANITY_PROJECT_ID=${env.SANITY_PROJECT_ID}`,
     `NEXT_PUBLIC_SANITY_DATASET=${env.SANITY_DATASET}`,
     `NEXT_PUBLIC_SANITY_API_VERSION=${env.SANITY_API_VERSION ?? '2025-02-19'}`,
+    `NEXT_PUBLIC_SANITY_STUDIO_URL=${env.NEXT_PUBLIC_SANITY_STUDIO_URL ?? 'http://localhost:3333'}`,
+    ...(env.SANITY_API_READ_TOKEN ? [`SANITY_API_READ_TOKEN=${env.SANITY_API_READ_TOKEN}`] : []),
   ].join('\n')
   writeFileSync(appEnv, `${appEnvContent}\n`)
   console.log('Wrote apps/frontend/.env.local')

@@ -1,5 +1,8 @@
-import {client} from './client'
+import {defineLive} from 'next-sanity/live'
+import {client, token} from './client'
 
-export async function sanityFetch<T>(query: string, params?: Record<string, unknown>) {
-  return params ? client.fetch<T>(query, params as any) : client.fetch<T>(query)
-}
+export const {sanityFetch, SanityLive} = defineLive({
+  client,
+  serverToken: token,
+  browserToken: token,
+})

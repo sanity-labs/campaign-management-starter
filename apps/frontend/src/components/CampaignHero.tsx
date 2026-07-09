@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import {stegaClean} from 'next-sanity'
 import {useEffect, useMemo, useState} from 'react'
 import {HeroBackground} from './HeroBackground'
 
@@ -49,12 +50,14 @@ export function CampaignHero({initialCampaign}: CampaignHeroProps) {
     hero?.subheadline || 'Premium outdoor and lifestyle gear designed for everyday explorers.'
   const heroCtaLabel =
     hero?.cta?.label || (activeCampaign?.promoPage ? 'Explore campaign' : 'Shop all')
+  const promoSlug = stegaClean(activeCampaign?.promoPage?.slug)
+  const categorySlug = stegaClean(activeCampaign?.targetCollection?.slug)
   const heroCtaHref =
-    hero?.cta?.url ||
-    (activeCampaign?.promoPage?.slug
-      ? `/promos/${activeCampaign.promoPage.slug}`
-      : activeCampaign?.targetCollection?.slug
-        ? `/products?category=${activeCampaign.targetCollection.slug}`
+    stegaClean(hero?.cta?.url) ||
+    (promoSlug
+      ? `/promos/${promoSlug}`
+      : categorySlug
+        ? `/products?category=${categorySlug}`
         : '/products')
 
   const heroImageSrc = useMemo(

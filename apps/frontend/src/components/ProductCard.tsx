@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import {stegaClean} from 'next-sanity'
 import {formatPrice} from '@/lib/utils'
 import {urlFor} from '@/sanity/image'
 
@@ -21,7 +22,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({product}: ProductCardProps) {
-  const {title, slug, image, price, category, brand} = product
+  const {title, image, price, category, brand} = product
+  const slug = stegaClean(product.slug)
   const hasDiscount = Boolean(price?.compareAtPrice && price.compareAtPrice > (price.amount ?? 0))
 
   return (

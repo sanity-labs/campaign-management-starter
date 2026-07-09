@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {CampaignHero} from '@/components/CampaignHero'
 import {ProductGrid} from '@/components/ProductGrid'
-import {client} from '@/sanity/client'
+import {sanityFetch} from '@/sanity/live'
 import {ACTIVE_CAMPAIGN_QUERY, FEATURED_PRODUCTS_QUERY} from '@/sanity/queries'
 
 interface ActiveCampaign {
@@ -20,10 +20,12 @@ interface ActiveCampaign {
 }
 
 export default async function HomePage() {
-  const [products, activeCampaign] = await Promise.all([
-    client.fetch(FEATURED_PRODUCTS_QUERY),
-    client.fetch<ActiveCampaign | null>(ACTIVE_CAMPAIGN_QUERY, {}, {tag: 'campaign.active'}),
+  const [productsResult, campaignResult] = await Promise.all([
+    sanityFetch({query: FEATURED_PRODUCTS_QUERY}),
+    sanityFetch({query: ACTIVE_CAMPAIGN_QUERY}),
   ])
+  const products = productsResult.data as Parameters<typeof ProductGrid>[0]['products']
+  const activeCampaign = campaignResult.data as ActiveCampaign | null
 
   return (
     <main>
