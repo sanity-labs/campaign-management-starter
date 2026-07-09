@@ -41,7 +41,7 @@ export const resolve: PresentationPluginOptions['resolve'] = {
     campaign: defineLocations({
       select: {
         title: 'title',
-        categorySlug: 'targetCollection->slug.current',
+        categorySlug: 'targetCollection.slug.current',
       },
       resolve: (doc) => ({
         locations: [
